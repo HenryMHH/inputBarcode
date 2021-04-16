@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>jsbarcode</title>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.3/JsBarcode.all.min.js"
+			integrity="sha512-TLB7v1Y4YHGy/EHUu5VZ2bl6sC/WvXh/NFdjEZ7JmbpsUG87dirXAOFSAS3O6Tn3rsZljFTcTdMz9PDM4mV26g=="
+			crossorigin="anonymous"
+		></script>
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+			body,
+			html {
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				border: 1px solid;
+				display: grid;
+				place-items: center;
+				height: 100vh;
+				position: relative;
+			}
+			input {
+				font-size: 1.5rem;
+				padding: 0.5rem 1rem;
+			}
+
+			.displayBox {
+				text-align: center;
+			}
+
+			#customField {
+				position: absolute;
+				max-width: 25vw;
+				right: 5%;
+			}
+
+			#customField input {
+				max-width: 50%;
+			}
+			ul {
+				list-style: none;
+			}
+			li {
+				margin: 0.5rem 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="displayBox">
+			<input
+				id="barcode"
+				type="text"
+				pattern="\d*"
+				name="barcode"
+				placeholder="請輸入barcode"
+				oninput="handleChange(this.value,document.getElementById('lineWidth').value)"
+				maxlength="10"
+			/>
+
+			<div>
+				<svg id="barcodeSVG"></svg>
+			</div>
+		</div>
+		<div id="customField">
+			<ul>
+				<li>
+					<label for="lineWidth">線條寬度</label>
+					<input
+						id="lineWidth"
+						type="text"
+						pattern="\d*"
+						maxlength="1"
+						name="lineWidth"
+						oninput="handleChange('',this.value)"
+						placeholder="默認為2"
+					/>
+				</li>
+				<li>
+					<label for="lineColor">線條顏色</label>
+					<input
+						type="text"
+						name="lineColor"
+						id="lineColor"
+						placeholder="#CCC"
+						oninput="handleChange('',document.getElementById('lineWidth').value,this.value)"
+					/>
+				</li>
+				<li></li>
+			</ul>
+		</div>
+		<script>
+			const handleChange = (text, lineWidth, lineColor) => {
+				console.log(lineWidth)
+				text.length === 0
+					? (text = document.getElementById('barcode').value)
+					: null
+				if (text.length !== 0) {
+					JsBarcode('#barcodeSVG', text, {
+						width: !lineWidth || lineWidth <= 0 ? 2 : lineWidth,
+						lineColor: lineColor,
+					})
+				} else {
+					let svg = document.getElementById('barcodeSVG')
+					while (svg.firstChild) {
+						svg.removeChild(svg.firstChild)
+					}
+				}
+			}
+		</script>
+	</body>
+</html>
